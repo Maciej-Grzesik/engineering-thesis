@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'camera_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,9 +37,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: Text('Home Page'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          // Navigate to the Camera page
+          await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CameraPage()),
+          );
+        },
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(100))),
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+        ),
         child: const Icon(Icons.camera_alt),
       ),
       bottomNavigationBar: BottomAppBar(

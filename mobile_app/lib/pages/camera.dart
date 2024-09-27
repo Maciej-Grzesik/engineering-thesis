@@ -1,14 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
-class Camera extends StatefulWidget {
-  const Camera({super.key});
+class CameraPage extends StatefulWidget {
+  const CameraPage({super.key});
 
   @override
-  State<Camera> createState() => _CameraState();
+  State<CameraPage> createState() => _CameraPageState();
 }
 
-class _CameraState extends State<Camera> {
+class _CameraPageState extends State<CameraPage> {
   List<CameraDescription> cameras = [];
   CameraController? cameraController;
 
@@ -26,39 +26,42 @@ class _CameraState extends State<Camera> {
   }
 
   Widget _buildUI() {
-    if (cameraController == null ||
-        cameraController?.value.isInitialized == false) {
+    if (cameraController == null || cameraController?.value.isInitialized == false) {
       return const Center(child: CircularProgressIndicator());
     }
     return SafeArea(
-        child: SizedBox.expand(
-            child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.8,
-          width: MediaQuery.sizeOf(context).width * 0.8,
-          child: CameraPreview(
-            cameraController!,
-          ),
+      child: SizedBox.expand(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.8,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: CameraPreview(cameraController!),
+            ),
+          ],
         ),
-      ],
-    )));
+      ),
+    );
   }
 
   Future<void> _setupCameraController() async {
-    List<CameraDescription> cameras = await availableCameras();
+    cameras = await availableCameras();
     if (cameras.isNotEmpty) {
       setState(() {
-        cameras = cameras;
-        cameraController =
-            CameraController(cameras.first, ResolutionPreset.high);
+        cameraController = CameraController(cameras.first, ResolutionPreset.high);
       });
 
       cameraController?.initialize().then((_) {
         setState(() {});
       });
     }
+  }
+
+  @override
+  void dispose() {
+    cameraController?.dispose();
+    super.dispose();
   }
 }
