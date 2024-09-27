@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/pages/home.dart';
+import 'package:mobile_app/pages/welcome.dart';
 
-Future<void> main() async {
+void main() {
   runApp(const MyApp());
 }
 
@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Hello :3',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        
       ),
-      home: const Home(),
+      home: const WelcomePage(title: 'Home',),
     );
   }
 }
