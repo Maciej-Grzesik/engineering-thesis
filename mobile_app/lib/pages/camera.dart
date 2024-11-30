@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_app/pages/mesh_gradient_background.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -27,22 +28,10 @@ class _CameraPageState extends State<CameraPage> {
 
   Widget _buildUI() {
     if (cameraController == null || cameraController?.value.isInitialized == false) {
-      return const Center(child: CircularProgressIndicator());
+      return const MeshGradientBackgroundPage(child: CircularProgressIndicator());
     }
-    return SafeArea(
-      child: SizedBox.expand(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.8,
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: CameraPreview(cameraController!),
-            ),
-          ],
-        ),
-      ),
+    return SizedBox.expand(
+      child: CameraPreview(cameraController!),
     );
   }
 

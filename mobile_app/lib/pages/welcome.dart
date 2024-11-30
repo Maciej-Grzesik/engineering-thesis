@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/pages/home_page.dart';
+import 'package:mobile_app/pages/entry_point.dart';
 
 class WelcomePage extends StatefulWidget {
   final String title;
@@ -34,7 +34,7 @@ class _WelcomePageState extends State<WelcomePage>
       });
       animationController.forward().then((_) {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomePage()));
+            MaterialPageRoute(builder: (context) => const EntryPoint()));
       });
     });
   }

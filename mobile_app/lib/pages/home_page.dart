@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'camera.dart';
+import 'package:mobile_app/pages/mesh_gradient_background.dart';
+import 'dart:ui';
+
+import 'package:mobile_app/utils/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -8,65 +12,55 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(
-        child: Text('Home Page'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Navigate to the Camera page
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CameraPage()),
-          );
-        },
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(100)),
-        ),
-        child: const Icon(Icons.camera_alt),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {},
-            ),
-            const SizedBox(width: 48),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              decoration: BoxDecoration(
+                color: themeProvider.themeDataStyle.colorScheme.secondary.withOpacity(0.6),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+              ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Welcome",
+                        style: TextStyle(
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                          color: themeProvider.themeDataStyle.colorScheme.onSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "to the Sign Language Recognition App",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: themeProvider.themeDataStyle.colorScheme.onSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "810598022076",
+    "project_id": "engineering-thesis-66bd4",
+    "storage_bucket": "engineering-thesis-66bd4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810598022076:android:29e0c7142b2ad1c82949b9",
+        "android_client_info": {
+          "package_name": "com.example.thesis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8nhmwja8CMcyJnIIJNRuzAWO8iW0vNbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
