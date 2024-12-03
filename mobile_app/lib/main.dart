@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/pages/entry_point.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:mobile_app/pages/login_page.dart';
+import 'package:mobile_app/pages/entry_point.dart';
+import 'package:mobile_app/pages_finished/login_page.dart';
+import 'package:mobile_app/pages/register_page.dart';
 import 'package:mobile_app/utils/locale_provider.dart';
 import 'package:mobile_app/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +11,9 @@ import 'utils/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   runApp(
     MultiProvider(

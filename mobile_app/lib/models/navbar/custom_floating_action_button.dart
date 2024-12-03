@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/utils/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 class CustomFloatingActionButton extends StatelessWidget {
   final bool isCameraPage;

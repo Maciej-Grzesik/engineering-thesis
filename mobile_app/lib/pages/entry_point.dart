@@ -1,17 +1,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mobile_app/models/entry_point_widgets/menu_button.dart';
+import 'package:mobile_app/models/toasts/predefined_toast.dart';
+import 'package:mobile_app/models/utils/open_menu_gesture.dart';
 import 'package:mobile_app/widgets/side_menu/side_menu.dart';
-import 'package:mobile_app/pages/home_page.dart';
-import 'package:mobile_app/pages/about_page.dart';
-import 'package:mobile_app/pages/mesh_gradient_background.dart';
-import 'package:mobile_app/pages/settings_page.dart';
-import 'package:mobile_app/pages/menu_button.dart';
+import 'package:mobile_app/pages_finished/home_page.dart';
+import 'package:mobile_app/models/utils/mesh_gradient_background.dart';
 import 'package:mobile_app/utils/theme_provider.dart';
-import 'package:provider/provider.dart';
 import 'camera.dart';
-import 'custom_floating_action_button.dart';
-import 'package:mobile_app/pages/navigation_bar.dart';
+import '../models/navbar/custom_floating_action_button.dart';
+import 'package:mobile_app/models/navbar/navigation_bar.dart';
 
 class EntryPoint extends StatefulWidget {
   const EntryPoint({super.key});
@@ -21,7 +19,7 @@ class EntryPoint extends StatefulWidget {
 }
 
 class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
-  late AnimationController _controller;
+  late AnimationController _animationController;
   late Animation<double> _animation;
   late Animation<double> _scaleAnimation;
   bool _isCameraPage = false;
@@ -34,7 +32,7 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _controller = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     )..addListener(() {
@@ -42,14 +40,22 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
       });
 
     _animation = Tween<double>(begin: 0, end: 1).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
     _scaleAnimation = Tween<double>(begin: 1, end: 0.9).animate(
-        CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -69,70 +75,45 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
       setState(() {
         isMenuOpen = false;
       });
-      _controller.reverse();
+      _animationController.reverse();
     });
   }
 
   void _goBack() {
-    debugPrint('Aktualna strona: ${_currentPage}');
     if (_pageStack.length > 1) {
       setState(() {
         _pageStack.removeLast();
         _currentPage = _pageStack.last;
       });
-    debugPrint('Strona poprzednia: ${_currentPage}');
     } else {
-      Fluttertoast.showToast(
-        msg: "Nie ma dokąd wrócić!",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.black87,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      PredefinedToast.showToast("There's nowhere to go back!", ToastType.error);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        if (details.localPosition.dx < 100) {
-          if (details.delta.dx > 100 && !isMenuOpen) {
-            _controller.forward();
-            setState(() {
-              isMenuOpen = true;
-            });
-          } else if (details.delta.dx < 0 && isMenuOpen) {
-            _controller.reverse();
-            setState(() {
-              isMenuOpen = false;
-            });
-          }
-        }
-      },
-      onHorizontalDragEnd: (details) {
-        if (isMenuOpen && details.primaryVelocity! < -200) {
-          _controller.reverse();
-          setState(() {
-            isMenuOpen = false;
-          });
-        } else if (!isMenuOpen && details.primaryVelocity! > 200) {
-          _controller.forward();
+    return OpenMenuGestureDetector(
+      onOpenMenu: () {
+        if (!isMenuOpen) {
+          _animationController.forward();
           setState(() {
             isMenuOpen = true;
           });
         }
       },
+      onCloseMenu: () {
+        if (isMenuOpen) {
+          _animationController.reverse();
+          setState(() {
+            isMenuOpen = false;
+          });
+        }
+      },
       child: Scaffold(
-        backgroundColor:
-            themeProvider.themeDataStyle.colorScheme.secondaryContainer,
+        backgroundColor: context.colorScheme.secondaryContainer,
         extendBody: true,
         body: Stack(
           children: [
-            
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
               curve: Curves.fastOutSlowIn,
@@ -143,7 +124,6 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
                 onMenuItemSelected: _updatePage,
               ),
             ),
-
             Transform(
               transform: Matrix4.identity()
                 ..setEntry(3, 2, 0.001)
@@ -161,7 +141,6 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
                 ),
               ),
             ),
-
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
               curve: Curves.ease,
@@ -171,9 +150,9 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
                 isMenuOpen: isMenuOpen,
                 press: () {
                   if (isMenuOpen) {
-                    _controller.reverse();
+                    _animationController.reverse();
                   } else {
-                    _controller.forward();
+                    _animationController.forward();
                   }
                   setState(() {
                     isMenuOpen = !isMenuOpen;
