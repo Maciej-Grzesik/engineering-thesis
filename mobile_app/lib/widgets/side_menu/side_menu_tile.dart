@@ -77,9 +77,9 @@ class _SideMenuTileState extends State<SideMenuTile>
                 width: widget.isActive ? 288 : 0,
                 child: Container(
                   decoration: BoxDecoration(
-                      color: themeProvider.themeDataStyle.colorScheme.primary,
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                      ),
+                    color: themeProvider.themeDataStyle.colorScheme.primary,
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                  ),
                 ),
               ),
               ListTile(
@@ -90,14 +90,18 @@ class _SideMenuTileState extends State<SideMenuTile>
                     scale: widget.scale,
                     child: ColorFiltered(
                       colorFilter: ColorFilter.mode(
-                        widget.isActive ? themeProvider.themeDataStyle.colorScheme.onPrimary : themeProvider.themeDataStyle.colorScheme.onSecondaryContainer,
+                        widget.isActive
+                            ? themeProvider.themeDataStyle.colorScheme.onPrimary
+                            : themeProvider.themeDataStyle.colorScheme
+                                .onSecondaryContainer,
                         BlendMode.srcIn,
                       ),
                       child: Lottie.asset(
                         widget.lottieAsset,
                         controller: _controller,
                         onLoaded: (composition) {
-                          _controller.duration = Duration(milliseconds: 700);
+                          _controller.duration =
+                              const Duration(milliseconds: 700);
                           _controller.forward();
                         },
                       ),
@@ -108,7 +112,10 @@ class _SideMenuTileState extends State<SideMenuTile>
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.easeOut,
                   style: TextStyle(
-                    color: widget.isActive ? themeProvider.themeDataStyle.colorScheme.onPrimary : themeProvider.themeDataStyle.colorScheme.onSecondaryContainer,
+                    color: widget.isActive
+                        ? themeProvider.themeDataStyle.colorScheme.onPrimary
+                        : themeProvider
+                            .themeDataStyle.colorScheme.onSecondaryContainer,
                     fontWeight: FontWeight.bold,
                   ),
                   child: Text(widget.title),

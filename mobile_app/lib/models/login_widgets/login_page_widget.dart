@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/pages/entry_point.dart';
-import 'package:mobile_app/pages/mesh_gradient_background.dart';
-import 'package:mobile_app/utils/theme_provider.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPageWidget extends StatelessWidget {
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  final bool isPasswordVisible;
+  final VoidCallback onPasswordToggle;
+  final VoidCallback onSignIn;
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
+  const LoginPageWidget({
+    super.key,
+    required this.usernameController,
+    required this.passwordController,
+    required this.isPasswordVisible,
+    required this.onPasswordToggle,
+    required this.onSignIn,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MeshGradientBackgroundPage(
-      child: Center(
-        child: SingleChildScrollView(
-          child: Container(
+    return Center(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final horizontalMargin = constraints.maxWidth * 0.1;
+          final verticalMargin = constraints.maxHeight * 0.1;
+
+          return Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            margin: const EdgeInsets.symmetric(horizontal: 16),
+            margin: EdgeInsets.symmetric(
+              horizontal: horizontalMargin,
+              vertical: verticalMargin,
+            ),
             decoration: BoxDecoration(
-              color: context.colorScheme.secondary.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.secondary.withOpacity(0.6),
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
@@ -55,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24),
                 TextField(
-                  controller: _usernameController,
+                  controller: usernameController,
                   decoration: InputDecoration(
                     hintText: "Enter username",
                     border: OutlineInputBorder(
@@ -67,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 TextField(
-                  controller: _passwordController,
-                  obscureText: !_isPasswordVisible,
+                  controller: passwordController,
+                  obscureText: !isPasswordVisible,
                   decoration: InputDecoration(
                     hintText: "Password",
                     border: OutlineInputBorder(
@@ -77,14 +84,10 @@ class _LoginPageState extends State<LoginPage> {
                     filled: true,
                     fillColor: Colors.white,
                     suffixIcon: IconButton(
-                      icon: _isPasswordVisible
+                      icon: isPasswordVisible
                           ? const Icon(Icons.visibility_rounded)
                           : const Icon(Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+                      onPressed: onPasswordToggle,
                     ),
                   ),
                 ),
@@ -93,6 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
+                      // Recovery logic
                     },
                     child: const Text(
                       "Recovery Password",
@@ -100,11 +104,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-
+                const SizedBox(height: 12),
                 ElevatedButton(
-                  onPressed: () {
-                  },
+                  onPressed: onSignIn,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Colors.redAccent,
@@ -117,8 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
-                const SizedBox(height: 16),
-
+                const SizedBox(height: 12),
                 const Row(
                   children: [
                     Expanded(child: Divider()),
@@ -129,32 +130,28 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(child: Divider()),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     IconButton(
                       icon: const Icon(Icons.g_mobiledata),
                       iconSize: 40,
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.apple),
                       iconSize: 40,
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                     ),
                     IconButton(
                       icon: const Icon(Icons.facebook),
                       iconSize: 40,
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -164,6 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     TextButton(
                       onPressed: () {
+                        // Register logic
                       },
                       child: const Text(
                         "Register now",
@@ -174,8 +172,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

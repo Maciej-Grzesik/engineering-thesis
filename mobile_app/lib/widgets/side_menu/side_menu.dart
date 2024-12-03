@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/widgets/side_menu/info_card.dart';
 import 'package:mobile_app/widgets/side_menu/side_menu_tile.dart';
-import 'package:mobile_app/pages/home_page.dart';
-import 'package:mobile_app/pages/about_page.dart';
+import 'package:mobile_app/pages_finished/home_page.dart';
+import 'package:mobile_app/pages_finished/about_page.dart';
 import 'package:mobile_app/pages/settings_page.dart';
 import 'package:mobile_app/utils/theme_provider.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_app/pages/mesh_gradient_background.dart';
+import 'package:mobile_app/models/utils/mesh_gradient_background.dart';
 
 class InfoCard extends StatefulWidget {
   const InfoCard({super.key, required this.name});

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class AboutCard extends StatefulWidget {
-  const AboutCard({super.key});
+class AboutTile extends StatefulWidget {
+  const AboutTile({super.key, required double screenWidth, required double screenHeight, required double padding, required int currentPage, required int pageCount, required PageController pageController});
 
   @override
-  State<AboutCard> createState() => _AboutCardState();
+  State<AboutTile> createState() => _AboutTileState();
 }
 
-class _AboutCardState extends State<AboutCard>  with SingleTickerProviderStateMixin {
+class _AboutTileState extends State<AboutTile>  with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override

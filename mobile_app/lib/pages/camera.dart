@@ -1,6 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_app/pages/mesh_gradient_background.dart';
+import 'package:mobile_app/models/utils/mesh_gradient_background.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});

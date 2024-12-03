@@ -53,7 +53,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   }
                 ),
             ),
-            ExpansionTile(title: Text("Languages"),
+            ExpansionTile(title: const Text("Languages"),
               children: [
                 ElevatedButton(
               onPressed: () => localeProvider.setLocale(const Locale('en')),

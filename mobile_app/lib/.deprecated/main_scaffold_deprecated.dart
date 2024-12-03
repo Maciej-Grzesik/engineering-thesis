@@ -3,7 +3,7 @@ import 'package:mobile_app/pages/camera.dart';
 import 'package:mobile_app/pages/entry_point.dart';
 
 class MainScaffold extends StatefulWidget {
-  const MainScaffold({super.key});
+  const MainScaffold({super.key, required AnimationController animationController, required Animation<double> animation, required Animation<double> scaleAnimation});
 
   @override
   State<MainScaffold> createState() => _MainScaffoldState();
