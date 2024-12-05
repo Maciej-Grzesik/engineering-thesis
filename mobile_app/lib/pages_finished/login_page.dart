@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_app/models/login_widgets/login_page_widget.dart';
+import 'package:mobile_app/models/toasts/predefined_toast.dart';
+import 'package:mobile_app/pages/entry_point.dart';
+import 'package:mobile_app/pages/register_page.dart';
+import 'package:mobile_app/service/auth/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,33 +13,50 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isPasswordVisible = false;
+  final _authService = AuthService();
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isPasswordVisible = !_isPasswordVisible;
-    });
-  }
-
-  void _onSignIn() {
-    final username = _usernameController.text;
+  Future<void> _handleSignIn() async {
+    final email = _emailController.text;
     final password = _passwordController.text;
 
-    if (username.isEmpty || password.isEmpty) {
-      _showError("Please fill in all fields");
-    } else {
-      // Add your login logic here
-      print("Logging in with username: $username and password: $password");
+    bool isValidEmail(String email) {
+      const emailRegex = r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$';
+      return RegExp(emailRegex).hasMatch(email);
+    }
+
+    if (!isValidEmail(email)) {
+      PredefinedToast.showToast("test", ToastType.error);
+      return;
+    }
+
+    try {
+      final user =
+          await _authService.loginUserWithEmailAndPassword(email, password);
+
+      if (user != null) {
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EntryPoint(),
+            ),
+          );
+        }
+      }
+
+      debugPrintStack(label: "Current user email: ${user!.email}");
+    } catch (e) {
+      //implement on ui
     }
   }
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.redAccent,
+  void _goToRegisterPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const RegisterPage(),
       ),
     );
   }
@@ -43,11 +64,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return LoginPageWidget(
-      usernameController: _usernameController,
+      handleSignIn: _handleSignIn,
+      goToRegisterPage: () => _goToRegisterPage(context),
+      emailController: _emailController,
       passwordController: _passwordController,
-      isPasswordVisible: _isPasswordVisible,
-      onPasswordToggle: _togglePasswordVisibility,
-      onSignIn: _onSignIn,
     );
   }
 }

@@ -22,14 +22,12 @@ class _SideMenuState extends State<SideMenu> {
       'title': 'Home',
       'lottieAsset': 'assets/icons/home.json',
       'scale': 1.0,
-      
       'page': const HomePage(),
     },
     {
       'title': 'About',
       'lottieAsset': 'assets/icons/about.json',
       'scale': 0.9,
-      
       'page': const AboutPage(),
     },
     {
@@ -55,15 +53,33 @@ class _SideMenuState extends State<SideMenu> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
-      backgroundColor: themeProvider.themeDataStyle.colorScheme.secondaryContainer,
+      backgroundColor:
+          themeProvider.themeDataStyle.colorScheme.secondaryContainer,
       body: SizedBox(
         width: 300,
         height: double.infinity,
-        child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            left: 5,
+            top: 25,
+            bottom: 10,
+          ),
           child: Column(
             children: [
               const InfoCard(name: "Test"),
+              Divider(
+                color: context.colorScheme.tertiary,
+              ),
               _buildMenuItems(),
+              const Spacer(),
+              Divider(
+                color: context.colorScheme.tertiary,
+              ),
+              const SideMenuTile(
+                  title: "Logout",
+                  lottieAsset: 'assets/icons/logout.json',
+                  isActive: false,
+                  scale: 1),
             ],
           ),
         ),
@@ -77,13 +93,26 @@ class _SideMenuState extends State<SideMenu> {
         int index = entry.key;
         Map<String, dynamic> menuItem = entry.value;
 
-        return SideMenuTile(
-          title: menuItem['title'],
-          lottieAsset: menuItem['lottieAsset'],
-          isActive: _activeIndex == index,
-          scale: menuItem['scale'],
-          
-          onTap: () => _setActiveIndex(index),
+        return Column(
+          children: [
+            if (index > 0)
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8.0,
+                  right: 16.0,
+                ),
+                child: Divider(
+                  color: context.colorScheme.outline,
+                ),
+              ),
+            SideMenuTile(
+              title: menuItem['title'],
+              lottieAsset: menuItem['lottieAsset'],
+              isActive: _activeIndex == index,
+              scale: menuItem['scale'],
+              onTap: () => _setActiveIndex(index),
+            ),
+          ],
         );
       }).toList(),
     );

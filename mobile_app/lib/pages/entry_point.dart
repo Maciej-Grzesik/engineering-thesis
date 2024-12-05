@@ -92,88 +92,93 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return OpenMenuGestureDetector(
-      onOpenMenu: () {
-        if (!isMenuOpen) {
-          _animationController.forward();
-          setState(() {
-            isMenuOpen = true;
-          });
-        }
-      },
-      onCloseMenu: () {
-        if (isMenuOpen) {
-          _animationController.reverse();
-          setState(() {
-            isMenuOpen = false;
-          });
-        }
-      },
-      child: Scaffold(
-        backgroundColor: context.colorScheme.secondaryContainer,
-        extendBody: true,
-        body: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.fastOutSlowIn,
-              width: 288,
-              left: isMenuOpen ? 0 : -288,
-              height: MediaQuery.of(context).size.height,
-              child: SideMenu(
-                onMenuItemSelected: _updatePage,
+    return PopScope(
+      canPop: false,
+      child: OpenMenuGestureDetector(
+        onOpenMenu: () {
+          if (!isMenuOpen) {
+            _animationController.forward();
+            setState(() {
+              isMenuOpen = true;
+            });
+          }
+        },
+        onCloseMenu: () {
+          if (isMenuOpen) {
+            _animationController.reverse();
+            setState(() {
+              isMenuOpen = false;
+            });
+          }
+        },
+        child: Scaffold(
+          backgroundColor: context.colorScheme.secondaryContainer,
+          extendBody: true,
+          body: Stack(
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.fastOutSlowIn,
+                width: 288,
+                left: isMenuOpen ? 0 : -288,
+                height: MediaQuery.of(context).size.height,
+                child: SideMenu(
+                  onMenuItemSelected: _updatePage,
+                ),
               ),
-            ),
-            Transform(
-              transform: Matrix4.identity()
-                ..setEntry(3, 2, 0.001)
-                ..rotateY(_animation.value - 30 * _animation.value * pi / 180),
-              child: Transform.translate(
-                offset: Offset(_animation.value * 288, 0),
-                child: Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    child: _isCameraPage
-                        ? const CameraPage()
-                        : MeshGradientBackgroundPage(child: _currentPage),
+              Transform(
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001)
+                  ..rotateY(
+                      _animation.value - 30 * _animation.value * pi / 180),
+                child: Transform.translate(
+                  offset: Offset(_animation.value * 288, 0),
+                  child: Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
+                      child: _isCameraPage
+                          ? const CameraPage()
+                          : MeshGradientBackgroundPage(child: _currentPage),
+                    ),
                   ),
                 ),
               ),
-            ),
-            AnimatedPositioned(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.ease,
-              top: 16,
-              left: isMenuOpen ? 220 : 0,
-              child: MenuButton(
-                isMenuOpen: isMenuOpen,
-                press: () {
-                  if (isMenuOpen) {
-                    _animationController.reverse();
-                  } else {
-                    _animationController.forward();
-                  }
-                  setState(() {
-                    isMenuOpen = !isMenuOpen;
-                  });
-                },
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.ease,
+                top: 16,
+                left: isMenuOpen ? 220 : 0,
+                child: MenuButton(
+                  isMenuOpen: isMenuOpen,
+                  press: () {
+                    if (isMenuOpen) {
+                      _animationController.reverse();
+                    } else {
+                      _animationController.forward();
+                    }
+                    setState(() {
+                      isMenuOpen = !isMenuOpen;
+                    });
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
-        floatingActionButton: Transform.translate(
-          offset: Offset(0, 150 * _animation.value),
-          child: CustomFloatingActionButton(
-            isCameraPage: _isCameraPage,
-            onPressed: _toggleCameraPage,
+            ],
           ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: Transform.translate(
-          offset: Offset(0, 150 * _animation.value - 36),
-          child: CustomNavigationBar(
-            onBackPressed: _goBack,
+          floatingActionButton: Transform.translate(
+            offset: Offset(0, 150 * _animation.value),
+            child: CustomFloatingActionButton(
+              isCameraPage: _isCameraPage,
+              onPressed: _toggleCameraPage,
+            ),
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: Transform.translate(
+            offset: Offset(0, 150 * _animation.value - 36),
+            child: CustomNavigationBar(
+              onBackPressed: _goBack,
+            ),
           ),
         ),
       ),

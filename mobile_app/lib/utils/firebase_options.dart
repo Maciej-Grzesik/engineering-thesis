@@ -24,10 +24,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -52,12 +49,20 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDq-IAvaM7ScOkfWbtoudgRi_uDlBfjUQk',
-    appId: '1:810598022076:ios:7d3f28c1d18e86d82949b9',
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyD8nhmwja8CMcyJnIIJNRuzAWO8iW0vNbo',
+    appId: '1:810598022076:android:a20bbc27d0e678ea2949b9',
     messagingSenderId: '810598022076',
     projectId: 'engineering-thesis-66bd4',
     storageBucket: 'engineering-thesis-66bd4.firebasestorage.app',
-    iosBundleId: 'com.engineering.thesis',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDq-IAvaM7ScOkfWbtoudgRi_uDlBfjUQk',
+    appId: '1:810598022076:ios:a1256ad524c29a632949b9',
+    messagingSenderId: '810598022076',
+    projectId: 'engineering-thesis-66bd4',
+    storageBucket: 'engineering-thesis-66bd4.firebasestorage.app',
+    iosBundleId: 'com.example.mobileApp',
   );
 }

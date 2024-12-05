@@ -62,19 +62,19 @@ class _SideMenuTileState extends State<SideMenuTile>
       },
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 12.0),
-            child: Divider(
-              color: Colors.black12,
-              height: 1,
-            ),
-          ),
+          // const Padding(
+          //   padding: EdgeInsets.only(left: 12.0),
+          //   child: Divider(
+          //     color: Colors.black12,
+          //     height: 1,
+          //   ),
+          // ),
           Stack(
             children: [
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 300),
                 height: 56,
-                width: widget.isActive ? 288 : 0,
+                width: widget.isActive ? 280 : 0,
                 child: Container(
                   decoration: BoxDecoration(
                     color: themeProvider.themeDataStyle.colorScheme.primary,
