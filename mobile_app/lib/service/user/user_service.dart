@@ -5,9 +5,7 @@ class UserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Dodaj użytkownika z dodatkowymi informacjami
-  Future<void> addUserInfo(
-      String username, Map<String, dynamic> userInfo) async {
+  Future<void> addUserInfo(String username, String userInfo) async {
     try {
       User? user = _auth.currentUser;
 
@@ -18,7 +16,7 @@ class UserService {
       // Tworzenie dokumentu użytkownika w Firestore
       await _firestore.collection('users').doc(user.uid).set({
         'username': username,
-        'userInfo': userInfo,
+        'userInfo': userInfo, // userInfo jest stringiem
         'email': user.email,
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -28,7 +26,7 @@ class UserService {
     }
   }
 
-  /// Pobierz informacje o użytkowniku
+  /// Pobiera informacje o użytkowniku
   Future<Map<String, dynamic>?> getUserInfo() async {
     try {
       User? user = _auth.currentUser;
@@ -43,7 +41,7 @@ class UserService {
       if (!doc.exists) {
         return null;
       }
-
+  
       return doc.data() as Map<String, dynamic>;
     } catch (e) {
       print("Error retrieving user info: $e");
@@ -51,8 +49,8 @@ class UserService {
     }
   }
 
-  /// Aktualizuj informacje o użytkowniku
-  Future<void> updateUserInfo(Map<String, dynamic> updatedInfo) async {
+  /// Aktualizuje pole `userInfo`
+  Future<void> updateUserInfo(String updatedUserInfo) async {
     try {
       User? user = _auth.currentUser;
 
@@ -61,7 +59,7 @@ class UserService {
       }
 
       await _firestore.collection('users').doc(user.uid).update({
-        'userInfo': updatedInfo,
+        'userInfo': updatedUserInfo, // Ustawia userInfo jako string
       });
     } catch (e) {
       print("Error updating user info: $e");

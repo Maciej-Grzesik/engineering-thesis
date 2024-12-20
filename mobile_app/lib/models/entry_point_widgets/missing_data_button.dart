@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/pages/missing_user_data_widget.dart';
 import 'package:mobile_app/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -73,7 +74,6 @@ class _MissingDataButtonState extends State<MissingDataButton>
     return SafeArea(
       child: GestureDetector(
         onTap: () {
-          // Przykład: zatrzymanie lub uruchomienie animacji po kliknięciu
           if (_scaleController.isAnimating) {
             stopScaleAnimation();
             stopRotationAnimation();
@@ -81,6 +81,13 @@ class _MissingDataButtonState extends State<MissingDataButton>
             startScaleAnimation();
             startRotationAnimation();
           }
+
+          Navigator.push<void>(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const MissingUserDataWidget(),
+            ),
+          );
         },
         child: AnimatedBuilder(
           animation: Listenable.merge([_scaleController, _rotationController]),

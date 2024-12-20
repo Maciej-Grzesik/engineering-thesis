@@ -64,10 +64,9 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                           AppLocalizations.of(context)!.hello_again,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: context.colorScheme.onSurface,
-                            fontSize: 16
-                          ),
+                              fontWeight: FontWeight.bold,
+                              color: context.colorScheme.onSurface,
+                              fontSize: 16),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -121,7 +120,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        // const SizedBox(height: 8),
+                        const Spacer(),
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
@@ -150,7 +150,8 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                 color: context.colorScheme.onPrimary),
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        // const SizedBox(height: 12),
+                        const Spacer(),
                         Row(
                           children: [
                             Expanded(

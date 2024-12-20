@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app/service/auth/auth_service.dart';
 import 'package:mobile_app/widgets/side_menu/info_card.dart';
 import 'package:mobile_app/widgets/side_menu/side_menu_tile.dart';
 import 'package:mobile_app/pages_finished/home_page.dart';
@@ -38,7 +39,9 @@ class _SideMenuState extends State<SideMenu> {
     },
   ];
 
+  AuthService _authService = AuthService();
   int _activeIndex = 0;
+  bool _isLogout = false;
 
   void _setActiveIndex(int index) {
     setState(() {
@@ -48,6 +51,20 @@ class _SideMenuState extends State<SideMenu> {
     widget.onMenuItemSelected(_menuItems[index]['page']);
   }
 
+  void _setLogout() {
+    setState(() {
+      _isLogout = !_isLogout;
+    });
+
+    _authService.signout();
+    Future.delayed(
+      Durations.medium1,
+      () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -55,32 +72,35 @@ class _SideMenuState extends State<SideMenu> {
     return Scaffold(
       backgroundColor:
           themeProvider.themeDataStyle.colorScheme.secondaryContainer,
-      body: SizedBox(
-        width: 300,
-        height: double.infinity,
+      body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 5,
-            top: 25,
-            bottom: 10,
-          ),
-          child: Column(
-            children: [
-              const InfoCard(name: "Test"),
-              Divider(
-                color: context.colorScheme.tertiary,
-              ),
-              _buildMenuItems(),
-              const Spacer(),
-              Divider(
-                color: context.colorScheme.tertiary,
-              ),
-              const SideMenuTile(
+          padding: EdgeInsets.only(left: 5),
+          child: SizedBox(
+            width: 300,
+            height: double.infinity,
+            child: Column(
+              children: [
+                const InfoCard(name: "Test"),
+                Divider(
+                  color: context.colorScheme.tertiary,
+                ),
+                _buildMenuItems(),
+                const Spacer(),
+                Divider(
+                  color: context.colorScheme.tertiary,
+                ),
+                SideMenuTile(
                   title: "Logout",
                   lottieAsset: 'assets/icons/logout.json',
-                  isActive: false,
-                  scale: 1),
-            ],
+                  isActive: _isLogout,
+                  scale: 1,
+                  onTap: _setLogout,
+                ),
+                Divider(
+                  color: context.colorScheme.tertiary,
+                ),
+              ],
+            ),
           ),
         ),
       ),
