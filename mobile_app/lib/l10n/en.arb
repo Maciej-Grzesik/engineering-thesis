@@ -27,5 +27,6 @@
     "dark": "Dark",
     "language": "Language",
     "english": "English",
-    "polish": "Polish"
+    "polish": "Polish",
+    "field_cannot_be_empty": "Field cannot be empty"
 }

@@ -26,5 +26,6 @@
     "dark": "Ciemny",
     "language": "Język",
     "english": "Angielski",
-    "polish": "Polski"
+    "polish": "Polski",
+    "field_cannot_be_empty": "Pole nie może być puste"
 }

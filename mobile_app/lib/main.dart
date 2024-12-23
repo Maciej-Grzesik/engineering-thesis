@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:mobile_app/pages/entry_point.dart';
-import 'package:mobile_app/pages/missing_user_data_widget.dart';
-import 'package:mobile_app/pages_finished/login_page.dart';
-import 'package:mobile_app/utils/firebase_options.dart';
-import 'package:mobile_app/utils/locale_provider.dart';
-import 'package:mobile_app/utils/theme_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:mobile_app/core/theme/theme.dart';
+import 'package:mobile_app/features/auth/presentation/bloc/bloc/auth_bloc.dart';
+import 'package:mobile_app/features/auth/presentation/pages/login_page.dart';
+import 'package:mobile_app/features/localization/presentation/bloc/localization_bloc.dart';
+import 'package:mobile_app/features/theme/bloc/theme_bloc.dart';
+import 'package:mobile_app/init_dependencies.dart';
+import 'package:mobile_app/l10n/l10n.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await initDependencies();
 
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => LocalizationBloc()..add(GetLanguage()),
+        ),
+        BlocProvider(
+          create: (_) => ThemeBloc(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -31,21 +36,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Provider.of<LocaleProvider>(context).locale;
-
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Hello :3',
-      theme: Provider.of<ThemeProvider>(context).themeDataStyle,
-      // home: const WelcomePage(
-      //   title: 'Home',
-      // ),
-
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-
-      home: const LoginPage(),
-      locale: locale,
+    return BlocBuilder<LocalizationBloc, AppLocalizationState>(
+      buildWhen: (previous, current) =>
+          previous.selectedLanguage != current.selectedLanguage,
+      builder: (context, localizationState) {
+        return BlocBuilder<ThemeBloc, ThemeMode>(
+          builder: (context, themeState) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Engineering thesis',
+              theme: ThemeDataStyle.light,
+              darkTheme: ThemeDataStyle.dark,
+              themeMode: themeState,
+              locale: localizationState.selectedLanguage.value,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: const LoginPage(),
+            );
+          },
+        );
+      },
     );
   }
 }
