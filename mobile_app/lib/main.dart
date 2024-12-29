@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mobile_app/core/theme/theme.dart';
-import 'package:mobile_app/features/auth/presentation/bloc/bloc/auth_bloc.dart';
-import 'package:mobile_app/features/auth/presentation/pages/login_page.dart';
-import 'package:mobile_app/features/localization/presentation/bloc/localization_bloc.dart';
-import 'package:mobile_app/features/theme/bloc/theme_bloc.dart';
+import 'package:mobile_app/features/_auth/presentation/bloc/auth_bloc.dart';
+import 'package:mobile_app/features/_auth/presentation/pages/login_page.dart';
+import 'package:mobile_app/features/_settings/presentation/blocs/localization_bloc/localization_bloc.dart';
+import 'package:mobile_app/features/_settings/presentation/blocs/theme_bloc/theme_bloc.dart';
+import 'package:mobile_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:mobile_app/init_dependencies.dart';
 import 'package:mobile_app/l10n/l10n.dart';
+
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -16,6 +18,9 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        BlocProvider(
+          create: (_) => serviceLocator<UserBloc>(),
+        ),
         BlocProvider(
           create: (_) => serviceLocator<AuthBloc>(),
         ),

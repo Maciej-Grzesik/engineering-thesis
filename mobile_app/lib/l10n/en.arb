@@ -28,5 +28,14 @@
     "language": "Language",
     "english": "English",
     "polish": "Polish",
-    "field_cannot_be_empty": "Field cannot be empty"
+    "field_cannot_be_empty": "Field cannot be empty",
+    "card_title_1": "Engineering thesis",
+    "card_title_2": "Author",
+    "card_title_3": "Functionality",
+    "card_description_1": "This project is an engineering thesis focused on developing a mobile application using Flutter. The application aims to demonstrate various functionalities and best practices in mobile app development.",
+    "card_description_2": "The author of this engineering thesis is a dedicated software engineer with a passion for mobile app development. The project showcases the author's skills and knowledge in creating robust and user-friendly applications.",
+    "card_description_3": "The application includes several key functionalities such as user authentication, data management, and a responsive user interface. Each feature is designed to provide a seamless and intuitive user experience.",
+    "no_user": "Current user is null",
+    "no_profile": "Couldn't find user profile"
+
 }

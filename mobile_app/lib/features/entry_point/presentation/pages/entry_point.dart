@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:mobile_app/.rewriting/models/utils/open_menu_gesture.dart';
 import 'package:mobile_app/core/common/widgets/mesh_gradient_background.dart';
 import 'package:mobile_app/core/common/widgets/predefined_toast.dart';
-import 'package:mobile_app/features/camera/camera.dart';
+import 'package:mobile_app/features/camera/presentation/pages/camera.dart';
 import 'package:mobile_app/features/entry_point/presentation/widgets/menu_button.dart';
-import 'package:mobile_app/features/home_page/home_page.dart';
-import 'package:mobile_app/features/navbar/navbar/custom_floating_action_button.dart';
-import 'package:mobile_app/features/navbar/navbar/navigation_bar.dart';
-import 'package:mobile_app/features/side_menu/side_menu/side_menu.dart';
+import 'package:mobile_app/features/home_page/presentation/pages/home_page.dart';
+import 'package:mobile_app/features/navbar/presentation/widgets/custom_floating_action_button.dart';
+import 'package:mobile_app/features/navbar/presentation/widgets/navigation_bar.dart';
+import 'package:mobile_app/features/navbar/side_menu/side_menu.dart';
 
 class EntryPoint extends StatefulWidget {
   static route() => MaterialPageRoute(

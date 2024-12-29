@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/features/user/missing_user_data_widget.dart';
+import 'package:mobile_app/core/common/widgets/exclamation_widget.dart';
 
 class MissingDataButton extends StatefulWidget {
   const MissingDataButton({super.key});

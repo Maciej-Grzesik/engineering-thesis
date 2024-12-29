@@ -1,19 +1,28 @@
+import base64
+import io
+import os
+from PIL import Image
+from flask import Flask, request, jsonify
 import cv2
+from imageio import imwrite
 import mediapipe as mp
 import torch
 import pandas as pd
 import numpy as np
 import ast
-
 from models.spoter_model_original import SPOTER, SPOTERnoPE
 from google.protobuf.json_format import MessageToDict
 
-CHECKPOINT_PATH = "C:/Users/Maciej/Desktop/InterpretableTransformer_SignLanguage-main/src/out-checkpoints/2WLASL100_SPOTERnoPE_mediaPipeHP/test_WLASL100_Spoter_noNorm_noAugm_mediaPipe_HandsAndPoseV3NoPosEmb/checkpoint_t_23.pth"
+# Initialize Flask app
+app = Flask(__name__)
+
+CHECKPOINT_PATH = "src/out-checkpoints/2WLASL100_SPOTERnoPE_mediaPipeHP/test_WLASL100_Spoter_noNorm_noAugm_mediaPipe_HandsAndPoseV3NoPosEmb/checkpoint_v_23.pth"
 HIDDEN_DIM = 150
 N_HEADS = 10
 NUM_CLASSES = 100
 
 
+# Load SPOTER model
 def load_model():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = SPOTERnoPE(num_classes=NUM_CLASSES, hidden_dim=HIDDEN_DIM, n_heads=N_HEADS)    
@@ -23,6 +32,7 @@ def load_model():
     
     model.to(device)
     return model
+
 
 
 def extract_XY(hands, pose, frames, columns, padVal=-2):
@@ -93,7 +103,7 @@ def extract_XY(hands, pose, frames, columns, padVal=-2):
                 fp.write('"%s",' % np.array2string(video_df[col].values, separator=',').replace("\n ", "").strip())
 
     print(f"Data saved to ")
-    
+
 
 def load_dataset_mediaPipe(file_location: str, n_landm=42):
     df = pd.read_csv(file_location, encoding="utf-8")
@@ -115,80 +125,87 @@ def predict(model, data):
     
     return prediction
 
+
 def use_labels(labels_path, prediction):
     df = pd.read_csv(labels_path, sep=';')
     for row in df.itertuples():
-        if row.gloss_number == prediction:  
+        if row.gloss_number == prediction:
             return row.gloss_name
 
 
-
-def main():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+@app.route('/predict', methods=['POST'])
+def predict_endpoint():
     model = load_model()
-    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # Load Mediapipe models
     mp_hands = mp.solutions.hands
     mp_pose = mp.solutions.pose
-    mp_drawing = mp.solutions.drawing_utils 
-
     hands = mp_hands.Hands(static_image_mode=False, max_num_hands=2, min_detection_confidence=0.5)
     pose = mp_pose.Pose(static_image_mode=False, min_detection_confidence=0.5)
-
-    cap = cv2.VideoCapture(0)
     
     columns1 = [["RHx" + str(i), "RHy" + str(i)] for i in range(21)]
     columns2 = [["LHx" + str(i), "LHy" + str(i)] for i in range(21)]
-    columns3 = [["Px" + str(i), "Py" + str(i),] for i in range(33)]
+    columns3 = [["Px" + str(i), "Py" + str(i)] for i in range(33)]
     columns = np.concatenate((columns1, columns2), axis=0)
     columns = np.concatenate((columns, columns3), axis=0)
     columns = [item for sublist in columns for item in sublist]
-
-    frames = []
     
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frames.append(frame)
-        if len(frames) >= 50:
-            extract_XY(hands, pose, frames, columns=columns)
+    try:
+        # Parse input JSON
+        data = request.get_json()
+        video_base64 = data['video']
 
-            inputs = load_dataset_mediaPipe('test.csv', n_landm=int(HIDDEN_DIM / 2))
-            print(f"Loaded inputs type: {type(inputs)}")
-            inputs = torch.tensor(np.array(inputs), dtype=torch.float32)  # Ensure tensor
-            print(f"Type of inputs: {type(inputs)}")
-            print(f"Inputs: {inputs}")
+        # Decode base64 video data and save to file
+        video_data = base64.b64decode(video_base64)
+        video_path = "received_video.mp4"
+        with open(video_path, "wb") as video_file:
+            video_file.write(video_data)
 
-            inputs = inputs.squeeze(0).to(device)
-            print(f"Converted inputs type: {type(inputs)}, shape: {inputs.shape}")
+        # Open video file with OpenCV
+        video_capture = cv2.VideoCapture(video_path)
+        if not video_capture.isOpened():
+            return jsonify({"error": "Failed to open video file"}), 400
 
-            outputs = model(inputs).expand(1, -1, -1)
-            pred = int(torch.argmax(torch.nn.functional.softmax(outputs, dim=2)))
+        # Extract frames and store in memory
+        frames = []
+        while True:
+            ret, frame = video_capture.read()
+            if not ret:
+                break
+            frames.append(frame)
 
-            frames.clear() 
-            print(f"Prediction: {pred}")
-            predicted_word = use_labels('WLASL100_dir/WLASL100_v0.3.csv', pred)
-            print(f'Word: {predicted_word}')
+        video_capture.release()
+        os.remove(video_path) 
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        extract_XY(hands, pose, frames, columns)
 
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results_hands = hands.process(frame_rgb)
-        results_pose = pose.process(frame_rgb)
+        print("checkpoint")
+        inputs = load_dataset_mediaPipe('test.csv', n_landm=int(HIDDEN_DIM / 2))        
+        inputs = torch.tensor(np.array(inputs), dtype=torch.float32)
+        inputs = inputs.squeeze(0).to(device)
 
-        if results_hands.multi_hand_landmarks:
-            for hand_landmarks in results_hands.multi_hand_landmarks:
-                mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+        print("checkpoint2")
+        outputs = model(inputs).expand(1, -1, -1)
+        print("checkpoint2.1")
+        prediction = int(torch.argmax(torch.nn.functional.softmax(outputs, dim=2)))
 
-        if results_pose.pose_landmarks:
-            mp_drawing.draw_landmarks(frame, results_pose.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-        cv2.imshow('Kamera', frame)
+        print("checkpoint3")
+        frames.clear() 
+        print(f"Prediction: {prediction}")
+        predicted_word = use_labels('WLASL100_dir/WLASL100_v0.3.csv', prediction)
+        print(f'Word: {predicted_word}')
+        
+        return jsonify({"prediction": prediction, "word": predicted_word})
 
-    cap.release()
-    cv2.destroyAllWindows()
+    except KeyError as e:
+        return jsonify({"error": f"Missing key: {str(e)}"}), 400
+    except ValueError as e:
+        return jsonify({"error": f"Value error: {str(e)}"}), 400
+    except Exception as e:
+        return jsonify({"error": f"Unexpected error: {str(e)}"}), 400
 
 
 if __name__ == "__main__":
-    main()
+    app.config['MAX_CONTENT_LENGTH'] = 1000 * 1024 * 1024  # Set maximum upload size to 10MB
+    app.run(host="0.0.0.0", port=6000)
