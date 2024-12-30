@@ -11,11 +11,9 @@ class StyledExpansionTile extends StatelessWidget {
     required this.children,
   });
 
-  
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
@@ -38,7 +36,6 @@ class StyledExpansionTile extends StatelessWidget {
                 dividerColor: Colors.transparent,
               ),
               child: ExpansionTile(
-                // trailing: const SizedBox(),
                 title: Text(
                   title,
                   style: TextStyle(
@@ -49,7 +46,6 @@ class StyledExpansionTile extends StatelessWidget {
                 ),
                 childrenPadding: const EdgeInsets.all(16),
                 children: [
-                  
                   ...children,
                 ],
               ),

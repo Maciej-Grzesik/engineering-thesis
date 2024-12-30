@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:mobile_app/.rewriting/models/utils/styled_expansions_tile.dart';
+import 'package:mobile_app/features/_settings/presentation/widgets/styled_expansions_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:mobile_app/features/_settings/presentation/blocs/localization_bloc/localization_bloc.dart';
 import 'package:mobile_app/core/common/models/language.dart';

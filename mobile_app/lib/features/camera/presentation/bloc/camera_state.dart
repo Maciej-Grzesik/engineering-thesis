@@ -9,8 +9,18 @@ sealed class CameraState extends Equatable {
 
 final class CameraInitial extends CameraState {}
 
-final class CameraSucces extends CameraState {}
+final class CameraSucces extends CameraState {
+  final Classification classification;
 
-final class CameraFailure extends CameraState {}
+  const CameraSucces(this.classification);
+}
+
+final class CameraFailure extends CameraState {
+  final String message;
+
+  const CameraFailure(this.message);
+}
 
 final class CameraLoading extends CameraState {}
+final class CameraRecording extends CameraState {}
+final class CameraNotRecording extends CameraState {}

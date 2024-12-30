@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:mobile_app/features/_auth/domain/use_cases/user_login.dart';
 import 'package:mobile_app/features/_auth/domain/repository/iauth_repository.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:mobile_app/core/error/error.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mobile_app/features/_auth/domain/entities/user.dart';
 
 class MockAuthRepository extends Mock implements IAuthRepository {}

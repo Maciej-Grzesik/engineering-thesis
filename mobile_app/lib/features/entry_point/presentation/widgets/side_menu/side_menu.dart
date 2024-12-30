@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/.rewriting/service/auth/auth_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/features/_about/presentation/pages/about_page.dart';
-import 'package:mobile_app/features/home_page/presentation/pages/home_page.dart';
+import 'package:mobile_app/features/_home_page/presentation/pages/home_page.dart';
 import 'package:mobile_app/features/_settings/presentation/pages/settings_page.dart';
-import 'package:mobile_app/features/navbar/side_menu/info_card.dart';
-import 'package:mobile_app/features/navbar/side_menu/side_menu_tile.dart';
+import 'package:mobile_app/features/entry_point/presentation/widgets/side_menu/info_card.dart';
+import 'package:mobile_app/features/entry_point/presentation/widgets/side_menu/side_menu_tile.dart';
+import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
 import 'package:mobile_app/features/user/presentation/pages/user_profile.dart';
 
 class SideMenu extends StatefulWidget {
-  final Function(Widget) onMenuItemSelected;
-
-  const SideMenu({super.key, required this.onMenuItemSelected});
+  const SideMenu({
+    super.key,
+  });
 
   @override
   State<SideMenu> createState() => _SideMenuState();
@@ -38,7 +39,6 @@ class _SideMenuState extends State<SideMenu> {
     },
   ];
 
-  final AuthService _authService = AuthService();
   int _activeIndex = 0;
   bool _isLogout = false;
 
@@ -46,8 +46,6 @@ class _SideMenuState extends State<SideMenu> {
     setState(() {
       _activeIndex = index;
     });
-
-    widget.onMenuItemSelected(_menuItems[index]['page']);
   }
 
   void _setLogout() {
@@ -55,7 +53,7 @@ class _SideMenuState extends State<SideMenu> {
       _isLogout = !_isLogout;
     });
 
-    _authService.signout();
+    // _authService.signout();
     Future.delayed(
       Durations.medium1,
       () {
@@ -71,11 +69,10 @@ class _SideMenuState extends State<SideMenu> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor:
-          colorScheme.secondaryContainer,
+      backgroundColor: colorScheme.secondaryContainer,
       body: SafeArea(
         child: Padding(
-          padding:const EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 5),
           child: SizedBox(
             width: 300,
             height: double.infinity,
@@ -84,7 +81,11 @@ class _SideMenuState extends State<SideMenu> {
                 InfoCard(
                     name: "Test",
                     onTap: () {
-                      widget.onMenuItemSelected(const UserProfile());
+                      context.read<NavbarBloc>().add(
+                            const PushPage(
+                              UserProfile(),
+                            ),
+                          );
                     }),
                 Divider(
                   color: colorScheme.tertiary,
@@ -137,7 +138,12 @@ class _SideMenuState extends State<SideMenu> {
               lottieAsset: menuItem['lottieAsset'],
               isActive: _activeIndex == index,
               scale: menuItem['scale'],
-              onTap: () => _setActiveIndex(index),
+              onTap: () => {
+                _setActiveIndex(index),
+                context
+                    .read<NavbarBloc>()
+                    .add(PushPage(_menuItems[index]['page']))
+              },
             ),
           ],
         );

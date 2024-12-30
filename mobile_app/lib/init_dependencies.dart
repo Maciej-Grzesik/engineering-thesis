@@ -10,18 +10,23 @@ import 'package:mobile_app/features/_auth/domain/repository/iauth_repository.dar
 import 'package:mobile_app/features/_auth/domain/use_cases/user_login.dart';
 import 'package:mobile_app/features/_auth/domain/use_cases/user_sign_up.dart';
 import 'package:mobile_app/features/_auth/presentation/bloc/auth_bloc.dart';
+import 'package:mobile_app/features/camera/data/data_sources/camera_remote_data_source.dart';
+import 'package:mobile_app/features/camera/data/repository/camera_repository.dart';
+import 'package:mobile_app/features/camera/domain/repository/icamera_repository.dart';
+import 'package:mobile_app/features/camera/domain/use_cases/get_classification.dart';
+import 'package:mobile_app/features/camera/presentation/bloc/camera_bloc.dart';
+import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
 import 'package:mobile_app/features/user/data/data_sources/user_profile_remote_data_source.dart';
 import 'package:mobile_app/features/user/data/repository/user_repository.dart';
 import 'package:mobile_app/features/user/domain/repository/iuser_profile_repository.dart';
 import 'package:mobile_app/features/user/domain/user_cases/get_user_profile_data.dart';
 import 'package:mobile_app/features/user/domain/user_cases/update_user_profile_data.dart';
 import 'package:mobile_app/features/user/presentation/bloc/user_bloc.dart';
+import 'package:http/http.dart' as http;
 
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
-  _initAuth();
-  _initUser();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -31,6 +36,42 @@ Future<void> initDependencies() async {
 
   serviceLocator.registerLazySingleton(() => firebaseAuth);
   serviceLocator.registerLazySingleton(() => FirebaseFirestore.instance);
+  serviceLocator.registerLazySingleton(() => http.Client());
+
+  _initAuth();
+  _initUser();
+  _initCamera();
+  _initNavbar();
+}
+
+void _initNavbar() {
+  serviceLocator.registerLazySingleton(
+    () => NavbarBloc(),
+  );
+}
+
+void _initCamera() {
+  serviceLocator
+    ..registerFactory<ICameraRemoteDataSource>(
+      () => CameraRemoteDataSource(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory<ICameraRepository>(
+      () => CameraRepository(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => GetClassification(
+        serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => CameraBloc(
+        getClassification: serviceLocator(),
+      ),
+    );
 }
 
 void _initUser() {

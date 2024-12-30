@@ -1,22 +1,27 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_app/core/common/util/open_menu_gesture.dart';
+import 'package:mobile_app/core/common/widgets/loader.dart';
 
-import 'package:mobile_app/.rewriting/models/utils/open_menu_gesture.dart';
 import 'package:mobile_app/core/common/widgets/mesh_gradient_background.dart';
 import 'package:mobile_app/core/common/widgets/predefined_toast.dart';
 import 'package:mobile_app/features/camera/presentation/pages/camera.dart';
 import 'package:mobile_app/features/entry_point/presentation/widgets/menu_button.dart';
-import 'package:mobile_app/features/home_page/presentation/pages/home_page.dart';
+import 'package:mobile_app/features/_home_page/presentation/pages/home_page.dart';
+import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
 import 'package:mobile_app/features/navbar/presentation/widgets/custom_floating_action_button.dart';
 import 'package:mobile_app/features/navbar/presentation/widgets/navigation_bar.dart';
-import 'package:mobile_app/features/navbar/side_menu/side_menu.dart';
+import 'package:mobile_app/features/entry_point/presentation/widgets/side_menu/side_menu.dart';
 
 class EntryPoint extends StatefulWidget {
   static route() => MaterialPageRoute(
         builder: (context) => const EntryPoint(),
       );
 
-  const EntryPoint({super.key});
+  const EntryPoint({
+    super.key,
+  });
 
   @override
   State<EntryPoint> createState() => _EntryPointState();
@@ -29,12 +34,11 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
   bool _isCameraPage = false;
   bool isMenuOpen = false;
 
-  final List<Widget> _pageStack = [const HomePage()];
-  Widget _currentPage = const HomePage();
-
   @override
   void initState() {
     super.initState();
+    print("initing state entry pounnt");
+    context.read<NavbarBloc>().add(const PushPage(HomePage()));
 
     _animationController = AnimationController(
       vsync: this,
@@ -67,31 +71,6 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
     setState(() {
       _isCameraPage = !_isCameraPage;
     });
-  }
-
-  void _updatePage(Widget page) {
-    setState(() {
-      _currentPage = page;
-      _pageStack.add(page);
-    });
-
-    Future.delayed(const Duration(milliseconds: 300), () {
-      setState(() {
-        isMenuOpen = false;
-      });
-      _animationController.reverse();
-    });
-  }
-
-  void _goBack() {
-    if (_pageStack.length > 1) {
-      setState(() {
-        _pageStack.removeLast();
-        _currentPage = _pageStack.last;
-      });
-    } else {
-      PredefinedToast.showToast("There's nowhere to go back!", ToastType.error);
-    }
   }
 
   bool isRecording = false;
@@ -135,9 +114,7 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
                 width: 288,
                 left: isMenuOpen ? 0 : -288,
                 height: MediaQuery.of(context).size.height,
-                child: SideMenu(
-                  onMenuItemSelected: _updatePage,
-                ),
+                child: const SideMenu(),
               ),
               Transform(
                 transform: Matrix4.identity()
@@ -152,7 +129,27 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
                       borderRadius: const BorderRadius.all(Radius.circular(25)),
                       child: _isCameraPage
                           ? const CameraPage()
-                          : MeshGradientBackgroundPage(child: _currentPage),
+                          : MeshGradientBackgroundPage(
+                              child: BlocConsumer<NavbarBloc, NavbarState>(
+                                listener: (context, state) {
+                                  if (state is GoBackFailure) {
+                                    PredefinedToast.showToast(
+                                        state.error, ToastType.error);
+                                  }
+                                },
+                                builder: (context, state) {
+                                  if (state is PushPageSuccess) {
+                                    return state.pageStack.last;
+                                  } else if (state is GoBackSuccess) {
+                                    return state.pageStack.last;
+                                  } else if (state is GoBackFailure) {
+                                    return state.pageStack.last;
+                                  } else {
+                                    return const Loader();
+                                  }
+                                },
+                              ),
+                            ),
                     ),
                   ),
                 ),
@@ -190,7 +187,6 @@ class _EntryPointState extends State<EntryPoint> with TickerProviderStateMixin {
           bottomNavigationBar: Transform.translate(
             offset: Offset(0, 150 * _animation.value - 36),
             child: CustomNavigationBar(
-              onBackPressed: _goBack,
               isCameraPage: _isCameraPage,
               startRecording: _startRecording,
             ),

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/core/common/widgets/exclamation_widget.dart';
 
-class MissingDataButton extends StatefulWidget {
-  const MissingDataButton({super.key});
+class ExlamationWidget extends StatefulWidget {
+  final Widget route;
+  const ExlamationWidget({super.key, required this.route});
 
   @override
-  State<MissingDataButton> createState() => _MissingDataButtonState();
+  State<ExlamationWidget> createState() => _ExlamationWidgetState();
 }
 
-class _MissingDataButtonState extends State<MissingDataButton>
+class _ExlamationWidgetState extends State<ExlamationWidget>
     with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late AnimationController _rotationController;
@@ -82,8 +82,11 @@ class _MissingDataButtonState extends State<MissingDataButton>
 
           Navigator.push<void>(
             context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => const MissingUserDataWidget(),
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => widget.route,
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder: (_, a, __, c) =>
+                  FadeTransition(opacity: a, child: c),
             ),
           );
         },

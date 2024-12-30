@@ -47,8 +47,11 @@ class _LoginPageState extends State<LoginPage> {
               } else if (state is AuthSuccess) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const EntryPoint(),
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => const EntryPoint(),
+                    transitionDuration: const Duration(milliseconds: 200),
+                    transitionsBuilder: (_, a, __, c) =>
+                        FadeTransition(opacity: a, child: c),
                   ),
                 );
               }

@@ -6,21 +6,25 @@ import 'package:mobile_app/features/camera/domain/repository/icamera_repository.
 
 import '../entities/classification.dart';
 
-class Getclassification implements UseCase<Classification, VideoDataParams> {
+class GetClassification implements UseCase<Classification, VideoDataParams> {
   final ICameraRepository _cameraRepository;
 
-  Getclassification(this._cameraRepository);
+  GetClassification(this._cameraRepository);
 
   @override
-  Future<Either<Failure, Classification>> call(params) {
-    return _cameraRepository.getClassification(b64Video: params.b64Video);
+  Future<Either<Failure, Classification>> call(params) async {
+    return await _cameraRepository.getClassification(
+      b64Video: params.b64Video,
+    );
   }
 }
 
 class VideoDataParams extends Equatable {
   final String b64Video;
 
-  const VideoDataParams(this.b64Video);
+  const VideoDataParams({
+    required this.b64Video,
+  });
 
   @override
   List<Object?> get props => throw UnimplementedError();

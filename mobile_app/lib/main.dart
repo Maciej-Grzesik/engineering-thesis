@@ -6,6 +6,8 @@ import 'package:mobile_app/features/_auth/presentation/bloc/auth_bloc.dart';
 import 'package:mobile_app/features/_auth/presentation/pages/login_page.dart';
 import 'package:mobile_app/features/_settings/presentation/blocs/localization_bloc/localization_bloc.dart';
 import 'package:mobile_app/features/_settings/presentation/blocs/theme_bloc/theme_bloc.dart';
+import 'package:mobile_app/features/camera/presentation/bloc/camera_bloc.dart';
+import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
 import 'package:mobile_app/features/user/presentation/bloc/user_bloc.dart';
 import 'package:mobile_app/init_dependencies.dart';
 import 'package:mobile_app/l10n/l10n.dart';
@@ -18,6 +20,12 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        BlocProvider(
+          create: (_) => serviceLocator<NavbarBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<CameraBloc>(),
+        ),
         BlocProvider(
           create: (_) => serviceLocator<UserBloc>(),
         ),

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app/.rewriting/models/utils/circle_clipper.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/core/common/widgets/predefined_toast.dart';
+import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
+import 'package:mobile_app/features/navbar/presentation/widgets/circle_clipper.dart';
 
 class CustomNavigationBar extends StatefulWidget {
-  const CustomNavigationBar(
-      {super.key,
-      required this.onBackPressed,
-      required this.isCameraPage,
-      required this.startRecording});
+  const CustomNavigationBar({
+    super.key,
+    required this.isCameraPage,
+    required this.startRecording,
+  });
 
-  final VoidCallback onBackPressed;
   final bool isCameraPage;
   final VoidCallback startRecording;
 
@@ -63,7 +64,10 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                         ToastType.error,
                       );
                     } else {
-                      widget.startRecording();
+                      // widget.startRecording();
+                      context.read<NavbarBloc>().add(
+                            SendClassificationEvent(),
+                          );
                     }
                   },
                   color: colorScheme.onSurface,
@@ -78,7 +82,10 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                     size: 35,
                     color: colorScheme.onSurface,
                   ),
-                  onPressed: () => widget.onBackPressed(),
+                  // onPressed: () => widget.onBackPressed(),
+                  onPressed: () {
+                    context.read<NavbarBloc>().add(GoBack());
+                  },
                   padding: EdgeInsets.zero,
                 ),
               ),
