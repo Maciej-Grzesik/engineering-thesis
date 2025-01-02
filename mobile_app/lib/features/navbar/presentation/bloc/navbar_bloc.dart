@@ -12,7 +12,10 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
     on<SendClassificationEvent>(_onSendClassification);
     on<PushPage>(_onPushPage);
     on<GoBack>(_onGoBack);
+    
   }
+
+
 
   void _onSendClassification(
       SendClassificationEvent event, Emitter<NavbarState> emit) async {
@@ -30,7 +33,6 @@ class NavbarBloc extends Bloc<NavbarEvent, NavbarState> {
     if (_pageStack.length > 1) {
       _pageStack.removeLast();
       emit(GoBackSuccess(_pageStack));
-      print(_pageStack);
     } else {
       emit(GoBackFailure(_pageStack, "There's nowhere to go back!"));
     }

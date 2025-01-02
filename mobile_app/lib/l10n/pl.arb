@@ -36,5 +36,15 @@
     "card_description_3": "Aplikacja zawiera kilka kluczowych funkcji, takich jak uwierzytelnianie użytkowników, zarządzanie danymi i responsywny interfejs użytkownika. Każda funkcja została zaprojektowana tak, aby zapewnić płynne i intuicyjne doświadczenie użytkownika.",
     "no_user": "Brak zalogowanego uzytkownika",
     "no_profile": "Nie znaleziono profilu uzytkownika",
-    "home_page": "W aplikacji do rozpoznawania znaków języka migowego!"
+    "home_page": "W aplikacji do rozpoznawania znaków języka migowego!",
+    "name": "Nazwa użytkownika",
+    "home": "Strona główna",
+    "about": "O Aplikacji",
+    "setting": "Ustawienia",
+    "logout": "Wyloguj się",
+    "error": "Błąd",
+    "failed_to_load_data": "Nie udało się pozyskać danych",
+    "loading": "Ładowanie...",
+    "please_wait": "Prosze czekać",
+    "user_profile": "Profil Użytkownika"
 }

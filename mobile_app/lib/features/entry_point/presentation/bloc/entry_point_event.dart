@@ -6,3 +6,5 @@ sealed class EntryPointEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+final class ToggleCameraPage extends EntryPointEvent {}

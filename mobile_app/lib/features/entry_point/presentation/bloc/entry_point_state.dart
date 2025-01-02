@@ -8,3 +8,6 @@ sealed class EntryPointState extends Equatable {
 }
 
 final class EntryPointInitial extends EntryPointState {}
+
+final class CameraPageOn extends EntryPointState {}
+final class CameraPageOff extends EntryPointState {}

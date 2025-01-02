@@ -10,19 +10,22 @@ import 'package:mobile_app/features/_auth/domain/repository/iauth_repository.dar
 import 'package:mobile_app/features/_auth/domain/use_cases/user_login.dart';
 import 'package:mobile_app/features/_auth/domain/use_cases/user_sign_up.dart';
 import 'package:mobile_app/features/_auth/presentation/bloc/auth_bloc.dart';
+import 'package:mobile_app/features/_user/domain/user_cases/logout.dart';
 import 'package:mobile_app/features/camera/data/data_sources/camera_remote_data_source.dart';
 import 'package:mobile_app/features/camera/data/repository/camera_repository.dart';
 import 'package:mobile_app/features/camera/domain/repository/icamera_repository.dart';
 import 'package:mobile_app/features/camera/domain/use_cases/get_classification.dart';
 import 'package:mobile_app/features/camera/presentation/bloc/camera_bloc.dart';
+import 'package:mobile_app/features/entry_point/presentation/bloc/entry_point_bloc.dart';
 import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
-import 'package:mobile_app/features/user/data/data_sources/user_profile_remote_data_source.dart';
-import 'package:mobile_app/features/user/data/repository/user_repository.dart';
-import 'package:mobile_app/features/user/domain/repository/iuser_profile_repository.dart';
-import 'package:mobile_app/features/user/domain/user_cases/get_user_profile_data.dart';
-import 'package:mobile_app/features/user/domain/user_cases/update_user_profile_data.dart';
-import 'package:mobile_app/features/user/presentation/bloc/user_bloc.dart';
+import 'package:mobile_app/features/_user/data/data_sources/user_profile_remote_data_source.dart';
+import 'package:mobile_app/features/_user/data/repository/user_repository.dart';
+import 'package:mobile_app/features/_user/domain/repository/iuser_profile_repository.dart';
+import 'package:mobile_app/features/_user/domain/user_cases/get_user_profile_data.dart';
+import 'package:mobile_app/features/_user/domain/user_cases/update_user_profile_data.dart';
+import 'package:mobile_app/features/_user/presentation/bloc/user_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile_app/features/side_menu/presentation/bloc/side_menu_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -42,6 +45,20 @@ Future<void> initDependencies() async {
   _initUser();
   _initCamera();
   _initNavbar();
+  _initSideMenu();
+  _initEntryPoint();
+}
+
+void _initSideMenu() {
+  serviceLocator.registerLazySingleton(
+    () => SideMenuBloc(),
+  );
+}
+
+void _initEntryPoint() {
+  serviceLocator.registerLazySingleton(
+    () => EntryPointBloc(),
+  );
 }
 
 void _initNavbar() {
@@ -97,6 +114,9 @@ void _initUser() {
         serviceLocator(),
       ),
     )
+    ..registerFactory(() => LogoutUseCase(
+          serviceLocator(),
+        ))
     ..registerLazySingleton(
       () => UserBloc(
         getUserProfile: serviceLocator(),

@@ -4,8 +4,8 @@ import 'package:mobile_app/core/common/widgets/glass.dart';
 import 'package:mobile_app/core/common/widgets/predefined_toast.dart';
 import 'package:mobile_app/core/utils/get_error_code.dart';
 import 'package:mobile_app/core/common/widgets/exlamation_widget.dart';
-import 'package:mobile_app/features/user/presentation/bloc/user_bloc.dart';
-import 'package:mobile_app/features/user/presentation/pages/user_continue_data.dart';
+import 'package:mobile_app/features/_user/presentation/bloc/user_bloc.dart';
+import 'package:mobile_app/features/_user/presentation/pages/user_continue_data.dart';
 import 'package:mobile_app/l10n/l10n.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,8 +40,6 @@ class _HomePageState extends State<HomePage> {
                   child: CircularProgressIndicator(),
                 );
               } else if (state is UserFailure) {
-                // String errorMessage = getErrorMessage(context, state.message);
-                // PredefinedToast.showToast(errorMessage, ToastType.error);
                 return const Positioned(
                   top: 16,
                   right: 0,

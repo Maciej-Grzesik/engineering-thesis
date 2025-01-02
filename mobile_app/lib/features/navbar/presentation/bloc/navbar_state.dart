@@ -49,3 +49,13 @@ class GoBackFailure extends NavbarState {
   @override
   List<Object> get props => [pageStack];
 }
+
+class PageChanged extends NavbarState {
+  final Widget page;
+
+  const PageChanged(this.page);
+
+  @override
+  List<Object> get props => [page];
+}
+

@@ -37,6 +37,16 @@
     "card_description_3": "The application includes several key functionalities such as user authentication, data management, and a responsive user interface. Each feature is designed to provide a seamless and intuitive user experience.",
     "no_user": "Current user is null",
     "no_profile": "Couldn't find user profile",
-    "home_page": "To the sign language recognition app!"
+    "home_page": "To the sign language recognition app!",
+    "name": "Username",
+    "home": "Home",
+    "about": "About",
+    "setting": "Settings",
+    "logout": "Logout",
+    "error": "Error",
+    "failed_to_load_data": "Failed to load data",
+    "loading": "Loading...",
+    "please_wait": "Please wait",
+    "user_profile": "User Profile"
 
 }

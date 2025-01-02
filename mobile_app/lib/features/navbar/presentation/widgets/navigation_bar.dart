@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_app/core/common/widgets/predefined_toast.dart';
+import 'package:mobile_app/features/entry_point/presentation/bloc/entry_point_bloc.dart';
 import 'package:mobile_app/features/navbar/presentation/bloc/navbar_bloc.dart';
 import 'package:mobile_app/features/navbar/presentation/widgets/circle_clipper.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   const CustomNavigationBar({
     super.key,
-    required this.isCameraPage,
-    required this.startRecording,
   });
-
-  final bool isCameraPage;
-  final VoidCallback startRecording;
 
   @override
   State<CustomNavigationBar> createState() => _CustomNavigationBarState();
@@ -50,28 +46,32 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.not_started_outlined,
-                    size: 35,
-                  ),
-                  onPressed: () {
-                    if (!widget.isCameraPage) {
-                      PredefinedToast.showToast(
-                        "Currently not on camera page",
-                        ToastType.error,
-                      );
-                    } else {
-                      // widget.startRecording();
-                      context.read<NavbarBloc>().add(
-                            SendClassificationEvent(),
+              BlocBuilder<EntryPointBloc, EntryPointState>(
+                builder: (context, state) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.not_started_outlined,
+                        size: 35,
+                      ),
+                      onPressed: () {
+                        if (state is CameraPageOff) {
+                          PredefinedToast.showToast(
+                            "Currently not on camera page",
+                            ToastType.error,
                           );
-                    }
-                  },
-                  color: colorScheme.onSurface,
-                ),
+                        } else {
+                          // widget.startRecording();
+                          context.read<NavbarBloc>().add(
+                                SendClassificationEvent(),
+                              );
+                        }
+                      },
+                      color: colorScheme.onSurface,
+                    ),
+                  );
+                },
               ),
               const SizedBox(width: 70),
               Padding(

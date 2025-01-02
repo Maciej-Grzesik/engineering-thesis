@@ -20,3 +20,4 @@ class PushPage extends NavbarEvent {
   @override
   List<Object> get props => [page];
 }
+
