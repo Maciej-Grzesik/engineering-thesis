@@ -6,6 +6,8 @@ from torch.utils.data import Subset
 from sklearn.model_selection import train_test_split
 import logging
 import torch
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
 
 
 def __balance_val_split(dataset, val_split=0.):
@@ -75,33 +77,55 @@ def train_epoch(model, dataloader, criterion, optimizer, device, scheduler=None)
     return running_loss, pred_correct, pred_all, (pred_correct / pred_all)
 
 
-def evaluate(model, dataloader, device, print_stats=False):
+def calculate_metrics(y_true, y_pred):
+    accuracy = accuracy_score(y_true, y_pred)
+    precision = precision_score(y_true, y_pred, average='weighted')
+    recall = recall_score(y_true, y_pred, average='weighted')
+    f1 = f1_score(y_true, y_pred, average='weighted')
+    return accuracy, precision, recall, f1
+
+
+def evaluate(model, dataloader, device, print_stats=True):
     pred_correct, pred_all = 0, 0
     stats = {i: [0, 0] for i in range(101)}
+    all_preds = []
+    all_labels = []
 
     for i, data in enumerate(dataloader):
         inputs, labels = data
-        print(f"Converted inputs type: {type(inputs)}, shape: {inputs.shape}")
         inputs = inputs.squeeze(0).to(device)
         labels = labels.to(device, dtype=torch.long)
         outputs = model(inputs).expand(1, -1, -1)
 
         # Statistics
         pred = int(torch.argmax(torch.nn.functional.softmax(outputs, dim=2)))
+        all_preds.append(pred)
+        all_labels.append(int(labels[0][0]))
+
         if pred == int(labels[0][0]):
             stats[int(labels[0][0])][0] += 1
             pred_correct += 1
 
         stats[int(labels[0][0])][1] += 1
         pred_all += 1
-        # print("POS EVOL: ", model.pos)
+
     if print_stats:
         stats = {key: value[0] / value[1] for key, value in stats.items() if value[1] != 0}
         print("Label accuracies statistics:")
         print(str(stats) + "\n")
         logging.info("Label accuracies statistics:")
         logging.info(str(stats) + "\n")
-    print("Total files Validation: ", str(i+1))
+
+    accuracy, precision, recall, f1 = calculate_metrics(all_labels, all_preds)
+    print(f'Accuracy: {accuracy:.4f}')
+    print(f'Precision: {precision:.4f}')
+    print(f'Recall: {recall:.4f}')
+    print(f'F1-score: {f1:.4f}')
+    logging.info(f'Accuracy: {accuracy:.4f}')
+    logging.info(f'Precision: {precision:.4f}')
+    logging.info(f'Recall: {recall:.4f}')
+    logging.info(f'F1-score: {f1:.4f}')
+
     return pred_correct, pred_all, (pred_correct / pred_all)
 
 

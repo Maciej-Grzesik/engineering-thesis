@@ -87,7 +87,7 @@ def load_dataset_mediaPipe(file_location: str, n_landm=42):
             current_row[:, land_i, 0] = ast.literal_eval(row[df.columns[0::2][land_i]]) #X
             current_row[:, land_i, 1] = ast.literal_eval(row[df.columns[1::2][land_i]]) #Y
         data.append(current_row)
-    print(data)
+    # print(data)
     return data, labels
 
 

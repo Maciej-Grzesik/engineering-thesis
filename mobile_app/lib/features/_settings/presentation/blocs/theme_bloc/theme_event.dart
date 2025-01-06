@@ -11,4 +11,7 @@ class ChangeTheme extends ThemeEvent {
   final bool isDark;
 
   const ChangeTheme(this.isDark);
+
+  @override
+  List<Object> get props => [isDark];
 }

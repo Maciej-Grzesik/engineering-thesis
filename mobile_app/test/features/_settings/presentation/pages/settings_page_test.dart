@@ -104,7 +104,6 @@ void main() {
 
       final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
-      // Expand the StyledExpansionTile
       await tester.tap(find.textContaining(l10n.theme));
       await tester.pumpAndSettle();
 

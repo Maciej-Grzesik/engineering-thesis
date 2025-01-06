@@ -26,10 +26,11 @@ class AboutCardArrows extends StatelessWidget {
         children: [
           if (currentPage > 0)
             IconButton(
-              icon: Icon(Icons.arrow_back_sharp,
-                  size: 48,
-                  color:
-                      colorScheme.onPrimaryContainer),
+              icon: Icon(
+                Icons.arrow_back_sharp,
+                size: 48,
+                color: colorScheme.onPrimaryContainer,
+              ),
               onPressed: () {
                 pageController.previousPage(
                   duration: const Duration(milliseconds: 300),
@@ -39,10 +40,11 @@ class AboutCardArrows extends StatelessWidget {
             ),
           if (currentPage < pageCount - 1)
             IconButton(
-              icon: Icon(Icons.arrow_forward_sharp,
-                  size: 48,
-                  color:
-                      colorScheme.onPrimaryContainer),
+              icon: Icon(
+                Icons.arrow_forward_sharp,
+                size: 48,
+                color: colorScheme.onPrimaryContainer,
+              ),
               onPressed: () {
                 pageController.nextPage(
                   duration: const Duration(milliseconds: 300),

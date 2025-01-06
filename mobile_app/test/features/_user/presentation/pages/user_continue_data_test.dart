@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile_app/features/_user/presentation/pages/fill_user_data.dart';
 import 'package:mobile_app/features/_user/presentation/pages/user_continue_data.dart';
 
 typedef Callback = void Function(MethodCall call);
