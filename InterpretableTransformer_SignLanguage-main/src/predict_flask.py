@@ -218,7 +218,7 @@ def predict_endpoint():
 
         frames.clear() 
         predicted_word = use_labels('WLASL100_dir/WLASL100_v0.3.csv', prediction)
-        
+        print(f"Predicted word: {predicted_word}")
         return jsonify({"prediction": prediction, "word": predicted_word})
 
     except KeyError as e:

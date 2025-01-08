@@ -41,7 +41,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       email: event.email,
       name: event.name,
     ));
-
+    print(response);
     response.fold(
       (l) => emit(UserFailure(l.message)),
       (r) => emit(UserSuccess(r)),

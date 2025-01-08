@@ -50,10 +50,12 @@ class UserProfileRemoteDataSource implements IUserProfileRemoteDataSource {
     required String email,
   }) async {
     try {
+      print("doszło to");
       final userProfile = _firebaseAuth.currentUser;
       if (userProfile == null) {
         throw Exception('error_code_no_user');
       }
+      print("przelo do usera");
       final userDocRef =
           _firebaseFirestore.collection('users').doc(userProfile.uid);
       final userDoc = await userDocRef.get();
