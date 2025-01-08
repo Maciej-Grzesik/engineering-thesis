@@ -94,6 +94,8 @@ class _CameraPageState extends State<CameraPage> {
         child: Loader(),
       );
     }
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Stack(
       children: [
         SizedBox.expand(child: CameraPreview(cameraController!)),
@@ -115,6 +117,7 @@ class _CameraPageState extends State<CameraPage> {
                 onCountdownComplete: () async {
                   final b64Video = await _startRecording();
                   if (context.mounted) {
+                    print("zaczynamy");
                     context.read<CameraBloc>().add(
                           ClassificationEvent(b64Video: b64Video),
                         );
@@ -124,6 +127,28 @@ class _CameraPageState extends State<CameraPage> {
                   }
                 },
               );
+            } else if (state is CameraSucces) {
+              return Positioned(
+                bottom: 150,
+                right: 50,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "Predicted word: ${state.classification.word}",
+                    style: TextStyle(
+                      color: colorScheme.onPrimaryContainer,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            } else if (state is CameraFailure) {
+              return const SizedBox();
             } else {
               return const SizedBox();
             }

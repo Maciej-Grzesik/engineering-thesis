@@ -21,11 +21,13 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   void _onGetClassification(
       ClassificationEvent event, Emitter<CameraState> emit) async {
     emit(CameraLoading());
+    print("getting classification");
     final response = await _getClassification(
       VideoDataParams(
         b64Video: event.b64Video,
       ),
     );
+    print(response);
     response.fold(
       (l) => emit(CameraFailure(l.message)),
       (classification) => emit(CameraSucces(classification)),

@@ -21,7 +21,7 @@ class CameraRemoteDataSource implements ICameraRemoteDataSource {
   }) async {
     try {
       final response = await client.post(
-        Uri.parse('http://192.168.0.9:6000/predict'),
+        Uri.parse('http://192.168.0.20:6000/predict'),
         headers: {
           'Content-Type': 'application/json',
         },

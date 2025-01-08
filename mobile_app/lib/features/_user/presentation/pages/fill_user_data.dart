@@ -78,7 +78,7 @@ class _UpdateUserDataPageState extends State<UpdateUserDataPage> {
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: "Email",
+                    labelText: "Additional information",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
